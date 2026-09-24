@@ -16,20 +16,6 @@ Plugin OSGi para o **iDempiere 13 (Orion)** que implementa um módulo de helpdes
 
 ---
 
-## 🚀 Status das Fases
-
-| Fase | Descrição | Status |
-| :--- | :--- | :---: |
-| **Fase 1** | Application Dictionary (Tabela, Colunas, Janela e Menu) | ✅ Concluída |
-| **Fase 2** | Plugin OSGi & Modelo Java (`MXXInternalRequest`, ModelFactory) | ✅ Concluída |
-| **Fase 3** | Callout de Prazo Automático por Prioridade | ⏳ Em Andamento |
-| **Fase 4** | Model Validator (Regras de Integridade e Validações) | ⏳ Pendente |
-| **Fase 5** | Process Java (`SvrProcess` — Resolver Solicitação) | ⏳ Pendente |
-| **Fase 6** | Relatórios (Nativo do Dicionário + JasperReports) | ⏳ Pendente |
-| **Fase 7** | Diferenciais (Event Handler OSGi & Exportação 2Pack) | ⏳ Pendente |
-
----
-
 ## 🛠️ Como Executar Localmente no Eclipse
 
 1. Importe o projeto no Eclipse com o target platform do iDempiere configurado.
