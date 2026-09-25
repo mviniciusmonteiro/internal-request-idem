@@ -8,4 +8,5 @@ Require-Bundle: org.adempiere.base;bundle-version="13.0.0",
 Automatic-Module-Name: org.marcus.internalrequest
 Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Service-Component: OSGI-INF/model-factory.xml
+Service-Component: OSGI-INF/model-factory.xml, 
+ OSGI-INF/callout-factory.xml
