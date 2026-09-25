@@ -30,11 +30,6 @@ public class InternalRequestPriorityCallout implements IColumnCallout {
             dateRequested = new Timestamp(System.currentTimeMillis());
         }
 			
-	    // 3. Obtém a Data da Solicitação (DateRequested). Se estiver vazia, assume a data atual
-		Timestamp dateRequested = (Timestamp) mTab.getValue(I_XX_InternalRequest.COLUMNNAME_DateRequested);
-			if (dateRequested == null) {
-				dateRequested = new Timestamp(System.currentTimeMillis());
-			}
 		
 		// 4. Determina quantos dias somar com base na prioridade selecionada
 		String priority = value.toString();
