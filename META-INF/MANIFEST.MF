@@ -10,4 +10,5 @@ Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/model-factory.xml, 
  OSGI-INF/callout-factory.xml,
- OSGI-INF/validator-factory.xml
+ OSGI-INF/validator-factory.xml,
+ OSGI-INF/process-factory.xml
