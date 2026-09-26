@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created for iDempiere 13 (JasperReports 6.x Compatible) -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="InternalRequestReport" 
+              pageWidth="842" 
+              pageHeight="595" 
+              orientation="Landscape" 
+              columnWidth="802" 
+              leftMargin="20" 
+              rightMargin="20" 
+              topMargin="20" 
+              bottomMargin="20" 
+              whenNoDataType="AllSectionsNoDetail"
+              uuid="a4b3c2d1-e5f6-4789-a012-3456789abcde">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NO_DATA_ADAPTER"/>
+	
+	<!-- Parâmetros de Contexto do iDempiere -->
+	<parameter name="AD_CLIENT_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="AD_Client_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="AD_ORG_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="AD_Org_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="AD_USER_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="AD_User_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="AD_PINSTANCE_ID" class="java.lang.Integer" isForPrompting="false"/>
+	
+	<!-- Parâmetros de Filtro do Usuário -->
+	<parameter name="DateRequested1" class="java.sql.Timestamp"/>
+	<parameter name="DateRequested2" class="java.sql.Timestamp"/>
+	<parameter name="RequestType" class="java.lang.String"/>
+	<parameter name="Priority" class="java.lang.String"/>
+	<parameter name="Status" class="java.lang.String"/>
+	<parameter name="AssignedTo_ID" class="java.lang.Integer"/>
+
+	<!-- Consulta SQL com decodificação amigável e filtros dinâmicos com CAST explícito -->
+	<queryString>
+		<![CDATA[
+		SELECT 
+		    r.XX_InternalRequest_ID,
+		    r.DocumentNo,
+		    r.DateRequested,
+		    r.DateNeeded,
+		    r.DateResolved,
+		    r.RequestType,
+		    CASE r.RequestType
+		        WHEN 'IT' THEN 'TI'
+		        WHEN 'HR' THEN 'Recursos Humanos'
+		        WHEN 'MN' THEN 'Manutenção'
+		        WHEN 'OT' THEN 'Outro'
+		        ELSE COALESCE(r.RequestType, '-')
+		    END AS requesttype_name,
+		    r.Priority,
+		    CASE r.Priority
+		        WHEN 'U' THEN '1 - Urgente'
+		        WHEN 'H' THEN '2 - Alta'
+		        WHEN 'M' THEN '3 - Média'
+		        WHEN 'L' THEN '4 - Baixa'
+		        ELSE COALESCE(r.Priority, '-')
+		    END AS priority_name,
+		    r.Status,
+		    CASE r.Status
+		        WHEN 'OP' THEN 'Aberta'
+		        WHEN 'IP' THEN 'Em Andamento'
+		        WHEN 'RS' THEN 'Resolvida'
+		        WHEN 'CN' THEN 'Cancelada'
+		        ELSE COALESCE(r.Status, '-')
+		    END AS status_name,
+		    COALESCE(r.Description, '') AS description,
+		    COALESCE(req.Name, 'Não Informado') AS requestedby_name,
+		    COALESCE(ass.Name, 'Não Atribuído') AS assignedto_name,
+		    org.Name AS org_name,
+		    cl.Name AS client_name
+		FROM XX_InternalRequest r
+		INNER JOIN AD_Client cl ON cl.AD_Client_ID = r.AD_Client_ID
+		INNER JOIN AD_Org org ON org.AD_Org_ID = r.AD_Org_ID
+		LEFT JOIN AD_User req ON req.AD_User_ID = r.RequestedBy_ID
+		LEFT JOIN AD_User ass ON ass.AD_User_ID = r.AssignedTo_ID
+		WHERE (COALESCE($P{AD_CLIENT_ID}, $P{AD_Client_ID}) IS NULL 
+		       OR COALESCE($P{AD_CLIENT_ID}, $P{AD_Client_ID}) = 0 
+		       OR r.AD_Client_ID = COALESCE($P{AD_CLIENT_ID}, $P{AD_Client_ID}))
+		  AND (CAST($P{Priority} AS varchar) IS NULL OR CAST($P{Priority} AS varchar) = '' OR r.Priority = $P{Priority})
+		  AND (CAST($P{Status} AS varchar) IS NULL OR CAST($P{Status} AS varchar) = '' OR r.Status = $P{Status})
+		  AND (CAST($P{RequestType} AS varchar) IS NULL OR CAST($P{RequestType} AS varchar) = '' OR r.RequestType = $P{RequestType})
+		  AND (CAST($P{AssignedTo_ID} AS integer) IS NULL OR CAST($P{AssignedTo_ID} AS integer) = 0 OR r.AssignedTo_ID = $P{AssignedTo_ID})
+		  AND (CAST($P{DateRequested1} AS timestamp) IS NULL OR r.DateRequested >= CAST($P{DateRequested1} AS timestamp))
+		  AND (CAST($P{DateRequested2} AS timestamp) IS NULL OR r.DateRequested <= CAST($P{DateRequested2} AS timestamp))
+		ORDER BY 
+		    priority_name ASC,
+		    r.DateRequested DESC
+		]]>
+	</queryString>
+
+	<!-- Campos Mapeados -->
+	<field name="xx_internalrequest_id" class="java.lang.Integer"/>
+	<field name="documentno" class="java.lang.String"/>
+	<field name="daterequested" class="java.sql.Timestamp"/>
+	<field name="dateneeded" class="java.sql.Timestamp"/>
+	<field name="dateresolved" class="java.sql.Timestamp"/>
+	<field name="requesttype" class="java.lang.String"/>
+	<field name="requesttype_name" class="java.lang.String"/>
+	<field name="priority" class="java.lang.String"/>
+	<field name="priority_name" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="status_name" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="requestedby_name" class="java.lang.String"/>
+	<field name="assignedto_name" class="java.lang.String"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="client_name" class="java.lang.String"/>
+
+	<!-- Agrupamento por Prioridade -->
+	<group name="PriorityGroup">
+		<groupExpression><![CDATA[$F{priority_name}]]></groupExpression>
+		<groupHeader>
+			<band height="44">
+				<!-- Faixa da Prioridade -->
+				<rectangle>
+					<reportElement x="0" y="4" width="802" height="20" backcolor="#1E3A8A" uuid="e1a2b3c4-1111-2222-3333-444455556666"/>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<textField>
+					<reportElement x="10" y="4" width="400" height="20" forecolor="#FFFFFF" uuid="d1e2f3a4-2222-3333-4444-555566667777"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["PRIORIDADE: " + $F{priority_name}.toUpperCase()]]></textFieldExpression>
+				</textField>
+
+				<!-- Cabeçalho das Colunas da Tabela -->
+				<rectangle>
+					<reportElement x="0" y="24" width="802" height="20" backcolor="#F1F5F9" uuid="c1d2e3f4-3333-4444-5555-666677778888"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#CBD5E1"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="5" y="24" width="75" height="20" forecolor="#334155" uuid="b1c2d3e4-4444-5555-6666-777788889999"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº Documento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="80" y="24" width="75" height="20" forecolor="#334155" uuid="a1b2c3d4-5555-6666-7777-888899990000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data Abertura]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="155" y="24" width="75" height="20" forecolor="#334155" uuid="91a2b3c4-6666-7777-8888-999900001111"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Prazo Estimado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="230" y="24" width="75" height="20" forecolor="#334155" uuid="8192a3b4-7777-8888-9999-000011112222"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data Resolução]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="305" y="24" width="100" height="20" forecolor="#334155" uuid="718293a4-8888-9999-0000-111122223333"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Solicitante]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="405" y="24" width="100" height="20" forecolor="#334155" uuid="61728394-9999-0000-1111-222233334444"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Responsável]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="505" y="24" width="65" height="20" forecolor="#334155" uuid="51627384-0000-1111-2222-333344445555"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tipo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="570" y="24" width="75" height="20" forecolor="#334155" uuid="41526374-1111-2222-3333-444455556666"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Status]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="645" y="24" width="152" height="20" forecolor="#334155" uuid="31425364-2222-3333-4444-555566667777"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Descrição]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="22">
+				<line>
+					<reportElement x="0" y="2" width="802" height="1" forecolor="#94A3B8" uuid="21324354-3333-4444-5555-666677778888"/>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="450" y="4" width="347" height="16" forecolor="#1E293B" uuid="11223344-4444-5555-6666-777788889999"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Subtotal (" + $F{priority_name} + "): " + $V{PriorityGroup_COUNT} + " chamado(s)"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+
+	<!-- Cabeçalho Principal do Relatório -->
+	<title>
+		<band height="65">
+			<rectangle>
+				<reportElement x="0" y="0" width="802" height="55" backcolor="#0F172A" uuid="a0b1c2d3-1234-5678-9012-3456789abcde"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="15" y="10" width="450" height="22" forecolor="#FFFFFF" uuid="b1c2d3e4-2345-6789-0123-456789abcdef"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO DE SOLICITAÇÕES INTERNAS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="32" width="450" height="16" forecolor="#94A3B8" uuid="c2d3e4f5-3456-7890-1234-56789abcdef0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Organização: " + ($F{org_name} != null ? $F{org_name} : "Geral") + " | Empresa: " + ($F{client_name} != null ? $F{client_name} : "Todas")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="560" y="12" width="230" height="16" forecolor="#CBD5E1" uuid="d3e4f5a6-4567-8901-2345-6789abcdef01"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[iDempiere ERP — Sistema de Gestão Interna]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="560" y="28" width="230" height="16" forecolor="#94A3B8" uuid="e4f5a6b7-5678-9012-3456-789abcdef012"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Gerado em: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+
+	<!-- Linhas de Dados (Detail) -->
+	<detail>
+		<band height="18">
+			<!-- Fundo alternado sutil (zebra) -->
+			<rectangle>
+				<reportElement x="0" y="0" width="802" height="18" backcolor="#F8FAFC" uuid="f5a6b7c8-6789-0123-4567-89abcdef0123">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			
+			<textField isBlankWhenNull="true">
+				<reportElement x="5" y="0" width="75" height="18" forecolor="#0F172A" uuid="1a2b3c4d-7890-1234-5678-9abcdef01234"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documentno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="80" y="0" width="75" height="18" forecolor="#334155" uuid="2b3c4d5e-8901-2345-6789-abcdef012345"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daterequested}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="155" y="0" width="75" height="18" forecolor="#334155" uuid="3c4d5e6f-9012-3456-789a-bcdef0123456"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dateneeded}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="230" y="0" width="75" height="18" forecolor="#334155" uuid="4d5e6f7a-0123-4567-89ab-cdef01234567"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dateresolved}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="0" width="100" height="18" forecolor="#334155" uuid="5e6f7a8b-1234-5678-9abc-def012345678"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{requestedby_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="405" y="0" width="100" height="18" forecolor="#334155" uuid="6f7a8b9c-2345-6789-abcd-ef0123456789"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{assignedto_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="505" y="0" width="65" height="18" forecolor="#334155" uuid="7a8b9c0d-3456-789a-bcde-f0123456789a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{requesttype_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="570" y="0" width="75" height="18" forecolor="#334155" uuid="8b9c0d1e-4567-89ab-cdef-0123456789ab"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status_name}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+				<reportElement x="645" y="0" width="152" height="18" forecolor="#475569" uuid="9c0d1e2f-5678-9abc-def0-123456789abc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+
+	<!-- Rodapé de Página -->
+	<pageFooter>
+		<band height="20">
+			<line>
+				<reportElement x="0" y="2" width="802" height="1" forecolor="#CBD5E1" uuid="0d1e2f3a-6789-abcd-ef01-23456789abcd"/>
+			</line>
+			<textField>
+				<reportElement x="550" y="4" width="247" height="14" forecolor="#64748B" uuid="1e2f3a4b-789a-bcde-f012-3456789abcde"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="4" width="250" height="14" forecolor="#64748B" uuid="2f3a4b5c-89ab-cdef-0123-456789abcdef"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Plugin de Gestão de Solicitações Internas]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+
+	<!-- Resumo Geral no Final do Relatório -->
+	<summary>
+		<band height="45">
+			<rectangle>
+				<reportElement x="0" y="8" width="802" height="32" backcolor="#F8FAFC" uuid="3a4b5c6d-9abc-def0-1234-56789abcdef0"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#CBD5E1"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="15" y="14" width="250" height="20" forecolor="#0F172A" uuid="4b5c6d7e-abcd-ef01-2345-6789abcdef01"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL GERAL DE SOLICITAÇÕES:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="265" y="14" width="100" height="20" forecolor="#1E3A8A" uuid="5c6d7e8f-bcde-f012-3456-789abcdef012"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
