@@ -97,6 +97,7 @@ c:\Users\vinic\idempiere-plugins\internalrequest-plugin\
   * `POST /api/v1/internal-requests`: Criação ágil (*Quick Create*) com cálculo de prazo e disparo do Event Handler.
   * `GET /api/v1/internal-requests/{id}`: Consulta formatada em JSON limpo e desacoplado.
   * `POST /api/v1/internal-requests/{id}/resolve`: Resolução remota do chamado via API.
+* > ⚠️ **Nota de Dependência REST**: O plugin funciona de forma autônoma para todas as operações da WebUI (Callouts, Validadores, Processos, Relatórios e Eventos). Para habilitar os endpoints REST acima, é necessário que o plugin base [idempiere-rest](https://github.com/bxservice/idempiere-rest) (`com.trekglobal.idempiere.rest.api`) esteja instalado e ativo no servidor.
 
 ---
 
@@ -124,6 +125,7 @@ c:\Users\vinic\idempiere-plugins\internalrequest-plugin\
 4. Na Run Configuration (`server.product`), verifique se o bundle `org.marcus.internalrequest` está marcado com:
    * **Auto-Start**: `true`
    * **Start Level**: `4` (ou padrão)
+   *(Opcional: Caso deseje utilizar a API REST da Fase 8, inclua também os bundles do `idempiere-rest` na Target Platform / Run Configuration).*
 5. Inicie o servidor. No console Gogo, confirme que o bundle está ativo:
    ```text
    ss internalrequest
