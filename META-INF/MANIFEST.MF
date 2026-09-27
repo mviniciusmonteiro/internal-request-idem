@@ -5,10 +5,14 @@ Bundle-SymbolicName: org.marcus.internalrequest;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.adempiere.base;bundle-version="13.0.0",
  org.adempiere.plugin.utils;bundle-version="13.0.0"
+Import-Package: org.osgi.service.component.annotations,
+ org.osgi.service.event
 Automatic-Module-Name: org.marcus.internalrequest
 Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/model-factory.xml, 
  OSGI-INF/callout-factory.xml,
  OSGI-INF/validator-factory.xml,
- OSGI-INF/process-factory.xml
+ OSGI-INF/process-factory.xml,
+ OSGI-INF/event-manager.xml
+Bundle-ActivationPolicy: lazy
