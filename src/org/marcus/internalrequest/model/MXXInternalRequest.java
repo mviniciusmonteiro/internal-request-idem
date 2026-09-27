@@ -18,13 +18,28 @@ import java.util.Properties;
 	 }
 	 
 	 /**
-		 * Construtor para carregar registro a partir de um ResultSet SQL
-		 */
+	  * Construtor para carregar registro a partir de um ResultSet SQL
+	  */
 	 public MXXInternalRequest(Properties ctx, ResultSet rs, String trxName) {
 		 super(ctx, rs, trxName);
 	 }
-	 
-	 
-	 
+
+	 @Override
+	 protected boolean beforeSave(boolean newRecord) {
+		 if (getEntityType() == null || getEntityType().trim().isEmpty()) {
+			 setEntityType("U");
+		 }
+		 if (getName() == null || getName().trim().isEmpty()) {
+			 setName(getDescription() != null && !getDescription().trim().isEmpty() ? getDescription() : "Solicitação Interna");
+		 }
+		 if (getValue() == null || getValue().trim().isEmpty()) {
+			 setValue(getDocumentNo() != null && !getDocumentNo().trim().isEmpty() ? getDocumentNo() : getName());
+		 }
+		 if (getRequestedBy_ID() <= 0) {
+			 int userId = org.compiere.util.Env.getAD_User_ID(getCtx());
+			 setRequestedBy_ID(userId > 0 ? userId : 101);
+		 }
+		 return super.beforeSave(newRecord);
+	 }
 
 }

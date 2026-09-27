@@ -4,8 +4,13 @@ Bundle-Name: Internalrequest
 Bundle-SymbolicName: org.marcus.internalrequest;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.adempiere.base;bundle-version="13.0.0",
- org.adempiere.plugin.utils;bundle-version="13.0.0"
-Import-Package: org.osgi.service.component.annotations,
+ org.adempiere.plugin.utils;bundle-version="13.0.0",
+ com.trekglobal.idempiere.rest.api;resolution:=optional
+Import-Package: com.fasterxml.jackson.databind;resolution:=optional,
+ com.fasterxml.jackson.databind.node;resolution:=optional,
+ javax.ws.rs;resolution:=optional,
+ javax.ws.rs.core;resolution:=optional,
+ org.osgi.service.component.annotations,
  org.osgi.service.event
 Automatic-Module-Name: org.marcus.internalrequest
 Bundle-Activator: org.adempiere.plugin.utils.Incremental2PackActivator
@@ -14,5 +19,7 @@ Service-Component: OSGI-INF/model-factory.xml,
  OSGI-INF/callout-factory.xml,
  OSGI-INF/validator-factory.xml,
  OSGI-INF/process-factory.xml,
- OSGI-INF/event-manager.xml
+ OSGI-INF/event-manager.xml,
+ OSGI-INF/rest-resource.xml
 Bundle-ActivationPolicy: lazy
+Export-Package: org.marcus.internalrequest.rest

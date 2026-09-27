@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="org.marcus.internalrequest.rest.InternalRequestResources">
+   <implementation class="org.marcus.internalrequest.rest.InternalRequestResources"/>
+   <service>
+      <provide interface="com.trekglobal.idempiere.rest.api.ResourceExtension"/>
+   </service>
+</scr:component>
