@@ -17,8 +17,8 @@ public class InternalRequestModelValidator implements ModelValidator {
 	@Override
 	public void initialize(ModelValidationEngine engine, MClient client) {
 		if (client != null) {
-			m_AD_Client_ID = client.getAD_Client_ID()
-;		}
+			m_AD_Client_ID = client.getAD_Client_ID();
+		}
 		
 		// Avisa o iDempiere: "Monitore a tabela XX_InternalRequest com este validador"
 		engine.addModelChange(I_XX_InternalRequest.Table_Name, this);

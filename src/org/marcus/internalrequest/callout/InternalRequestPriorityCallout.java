@@ -24,35 +24,33 @@ public class InternalRequestPriorityCallout implements IColumnCallout {
 			return null;
 		}
 		
-		  // 2. Data base: DateRequested (se nula, assume o momento atual)
-        Timestamp dateRequested = (Timestamp) mTab.getValue(I_XX_InternalRequest.COLUMNNAME_DateRequested);
-        if (dateRequested == null) {
-            dateRequested = new Timestamp(System.currentTimeMillis());
-        }
-			
+		// 2. Data base: DateRequested (se nula, assume o momento atual)
+		Timestamp dateRequested = (Timestamp) mTab.getValue(I_XX_InternalRequest.COLUMNNAME_DateRequested);
+		if (dateRequested == null) {
+			dateRequested = new Timestamp(System.currentTimeMillis());
+		}
 		
-		// 4. Determina quantos dias somar com base na prioridade selecionada
+		// 3. Determina quantos dias somar com base na prioridade selecionada
 		String priority = value.toString();
 		int daysToAdd = 0;
 		
 		if (X_XX_InternalRequest.PRIORITY_Urgente.equals(priority)) {      // 'U'
-            daysToAdd = 1;
-        } else if (X_XX_InternalRequest.PRIORITY_Alta.equals(priority)) {  // 'H'
-            daysToAdd = 3;
-        } else if ("M".equals(priority)) {                                 // 'M' (Média)
-            daysToAdd = 7;
-        } else if (X_XX_InternalRequest.PRIORITY_Baixa.equals(priority)) { // 'L'
-            daysToAdd = 15;
-        } else {
-            return null; // Prioridade desconhecida
-        }
+			daysToAdd = 1;
+		} else if (X_XX_InternalRequest.PRIORITY_Alta.equals(priority)) {  // 'H'
+			daysToAdd = 3;
+		} else if ("M".equals(priority)) {                                 // 'M' (Média)
+			daysToAdd = 7;
+		} else if (X_XX_InternalRequest.PRIORITY_Baixa.equals(priority)) { // 'L'
+			daysToAdd = 15;
+		} else {
+			return null; // Prioridade desconhecida
+		}
 		
-		// 5. Calcula a nova data truncada (00:00:00) usando o utilitário nativo TimeUtil
+		// 4. Calcula a nova data truncada (00:00:00) usando o utilitário nativo TimeUtil
 		Timestamp calculatedDate = TimeUtil.addDays(dateRequested, daysToAdd);
 			
-		// 6. Atualiza o campo DateNeeded na tela do usuário
-        mTab.setValue(I_XX_InternalRequest.COLUMNNAME_DateNeeded, calculatedDate);
-			
+		// 5. Atualiza o campo DateNeeded na tela do usuário
+		mTab.setValue(I_XX_InternalRequest.COLUMNNAME_DateNeeded, calculatedDate);
 		
 		return null;  // Sucesso
 		
