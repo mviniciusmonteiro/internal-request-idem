@@ -12,12 +12,14 @@ import org.osgi.service.event.Event;
 
 /**
  * Event Delegate para Solicitação Interna (Internal Request).
- * Implementa a arquitetura moderna de Event Annotations (NF9 / iDempiere 9 a 13).
- * Intercepta eventos de ciclo de vida do modelo com tipagem estática e desacoplamento de boot.
+ * Implementa a arquitetura moderna de Event Annotations (NF9 / iDempiere 9 a
+ * 13).
+ * Intercepta eventos de ciclo de vida do modelo com tipagem estática e
+ * desacoplamento de boot.
  * 
- * @author Marcus
  */
-@EventTopicDelegate
+
+@EventTopicDelegate // Avisa ao EventManager que esta classe é um receptor de eventos
 @ModelEventTopic(modelClass = MXXInternalRequest.class)
 public class InternalRequestEventDelegate extends ModelEventDelegate<MXXInternalRequest> {
 
@@ -38,10 +40,9 @@ public class InternalRequestEventDelegate extends ModelEventDelegate<MXXInternal
 		// Alerta especial no console quando a Prioridade for Urgente
 		if (X_XX_InternalRequest.PRIORITY_Urgente.equals(req.getPriority())) {
 			String alertMsg = String.format(
-				"[URGENT REQUEST ALERT] Solicitação Urgente! Nº: %s | Solicitante: %d",
-				req.getDocumentNo(),
-				req.getRequestedBy_ID()
-			);
+					"[URGENT REQUEST ALERT] Solicitação Urgente! Nº: %s | Solicitante: %d",
+					req.getDocumentNo(),
+					req.getRequestedBy_ID());
 
 			System.out.println("================================================================================");
 			System.out.println("🚨 " + alertMsg);

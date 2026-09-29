@@ -103,13 +103,7 @@ public class InternalRequestResource {
 			// Cálculo da data necessária por prioridade (Mesma regra de negócio do Callout)
 			int days = 7;
 			String priority = req.getPriority();
-			if ("U".equalsIgnoreCase(priority)) {
-				days = 1;
-			} else if ("H".equalsIgnoreCase(priority)) {
-				days = 3;
-			} else if ("L".equalsIgnoreCase(priority)) {
-				days = 15;
-			}
+			days = MXXInternalRequest.getDaysForPriority(priority);
 			req.setDateNeeded(Timestamp.valueOf(LocalDate.now().plusDays(days).atStartOfDay()));
 
 			// saveEx executa transação, aciona ModelValidator (Fase 4) e EventDelegate

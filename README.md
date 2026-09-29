@@ -122,9 +122,9 @@ c:\Users\vinic\idempiere-plugins\internalrequest-plugin\
    * **File → Import... → General → Existing Projects into Workspace**.
    * Selecione a pasta do repositório clonado e clique em **Finish**.
 3. Certifique-se de que a Target Platform do **iDempiere 13** está ativa no Eclipse.
-4. Na Run Configuration (`server.product`), verifique se o bundle `org.marcus.internalrequest` está marcado com:
+4. Na Run Configuration (`server.product`), certifique-se de adicionar o bundle `org.marcus.internalrequest` com:
    * **Auto-Start**: `true`
-   * **Start Level**: `4` (ou padrão)
+   * **Start Level**: `2` *(Recomendado para que o serviço do Model Validator esteja ativo antes da inicialização do ModelValidationEngine e do Jetty no nível 4)*
    *(Opcional: Caso deseje utilizar a API REST da Fase 8, inclua também os bundles do `idempiere-rest` na Target Platform / Run Configuration).*
 5. Inicie o servidor. No console Gogo, confirme que o bundle está ativo:
    ```text

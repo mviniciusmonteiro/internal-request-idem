@@ -5,9 +5,9 @@ import org.osgi.service.component.annotations.Component;
 
 /**
  * Gerenciador de eventos baseado em anotações para o plugin Internal Request.
- * Escaneia o pacote org.marcus.internalrequest.event e registra os delegates anotados.
+ * Escaneia o pacote org.marcus.internalrequest.event e registra os delegates
+ * anotados.
  * 
- * @author Marcus
  */
 @Component(immediate = true, service = InternalRequestEventManager.class)
 public class InternalRequestEventManager extends AnnotationBasedEventManager {
@@ -17,6 +17,6 @@ public class InternalRequestEventManager extends AnnotationBasedEventManager {
 
 	@Override
 	public String[] getPackages() {
-		return new String[] {"org.marcus.internalrequest.event"};
+		return new String[] { "org.marcus.internalrequest.event" };
 	}
 }

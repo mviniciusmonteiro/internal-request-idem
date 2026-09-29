@@ -8,6 +8,7 @@ import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.compiere.util.TimeUtil;
 import org.marcus.internalrequest.model.I_XX_InternalRequest;
+import org.marcus.internalrequest.model.MXXInternalRequest;
 import org.marcus.internalrequest.model.X_XX_InternalRequest;
 
 /**
@@ -18,43 +19,33 @@ public class InternalRequestPriorityCallout implements IColumnCallout {
 
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
-		
+
 		// 1. Se o valor for nulo (usuário limpou a prioridade), não faz nada
 		if (value == null || value.toString().trim().isEmpty()) {
 			return null;
 		}
-		
+
 		// 2. Data base: DateRequested (se nula, assume o momento atual)
 		Timestamp dateRequested = (Timestamp) mTab.getValue(I_XX_InternalRequest.COLUMNNAME_DateRequested);
 		if (dateRequested == null) {
 			dateRequested = new Timestamp(System.currentTimeMillis());
 		}
-		
+
 		// 3. Determina quantos dias somar com base na prioridade selecionada
 		String priority = value.toString();
 		int daysToAdd = 0;
-		
-		if (X_XX_InternalRequest.PRIORITY_Urgente.equals(priority)) {      // 'U'
-			daysToAdd = 1;
-		} else if (X_XX_InternalRequest.PRIORITY_Alta.equals(priority)) {  // 'H'
-			daysToAdd = 3;
-		} else if ("M".equals(priority)) {                                 // 'M' (Média)
-			daysToAdd = 7;
-		} else if (X_XX_InternalRequest.PRIORITY_Baixa.equals(priority)) { // 'L'
-			daysToAdd = 15;
-		} else {
-			return null; // Prioridade desconhecida
-		}
-		
-		// 4. Calcula a nova data truncada (00:00:00) usando o utilitário nativo TimeUtil
+
+		daysToAdd = MXXInternalRequest.getDaysForPriority(priority);
+
+		// 4. Calcula a nova data truncada (00:00:00) usando o utilitário nativo
+		// TimeUtil
 		Timestamp calculatedDate = TimeUtil.addDays(dateRequested, daysToAdd);
-			
+
 		// 5. Atualiza o campo DateNeeded na tela do usuário
 		mTab.setValue(I_XX_InternalRequest.COLUMNNAME_DateNeeded, calculatedDate);
-		
-		return null;  // Sucesso
-		
-		
+
+		return null; // Sucesso
+
 	}
 
 }
